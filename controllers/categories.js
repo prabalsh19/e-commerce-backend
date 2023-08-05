@@ -1,16 +1,30 @@
 const { categories } = require("../model/categories");
 
 exports.getCategories = async (req, res) => {
-  const response = await categories.find({}).lean();
-  res.json({
-    categories: response,
-  });
+  try {
+    const response = await categories.find({}).lean();
+    res.json({
+      categories: response,
+    });
+  } catch (e) {
+    res.json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
 };
 
 exports.getCategory = async (req, res) => {
-  const { id } = req.params;
-  const category = await categories.findById(id);
-  res.json({
-    category,
-  });
+  try {
+    const { id } = req.params;
+    const category = await categories.findById(id);
+    res.json({
+      category,
+    });
+  } catch (e) {
+    res.json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
 };

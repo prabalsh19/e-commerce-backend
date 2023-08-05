@@ -8,13 +8,13 @@ const { cart } = require("./routes/cart");
 const { wishlist } = require("./routes/wishlist");
 
 config();
-dbConnect();
+dbConnect(() =>
+  app.listen(3000, () => console.log("App is listening at port 3000"))
+);
 
 const app = express();
 
 app.use(express.json());
-
-app.listen(3000, () => console.log("App is listening at port 3000"));
 
 app.get("/", (req, res) => {
   res.send("Everthing working fine!");
