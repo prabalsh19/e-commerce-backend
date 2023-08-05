@@ -5,6 +5,7 @@ const { auth } = require("./routes/auth");
 const { products } = require("./routes/products");
 const { categories } = require("./routes/categories");
 const { cart } = require("./routes/cart");
+const { wishlist } = require("./routes/wishlist");
 
 config();
 dbConnect();
@@ -23,3 +24,4 @@ app.use("/api/auth", auth);
 app.use("/api/products", products);
 app.use("/api/categories", categories);
 app.use("/api/user/cart", cart);
+app.use("/api/user/wishlist", wishlist);
