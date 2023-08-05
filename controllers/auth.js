@@ -44,6 +44,7 @@ exports.loginHandler = async (req, res) => {
   }
 
   const checkPass = await bcrypt.compare(password, userExist.password);
+
   if (!checkPass) {
     return res.json({
       success: false,
@@ -51,12 +52,11 @@ exports.loginHandler = async (req, res) => {
     });
   }
   const encodedToken = jwt.sign(
-    { email: userExist.email },
+    { _id: userExist._id, email: userExist.email },
     process.env.JWT_SECRET
   );
 
   userExist.password = undefined;
-  userExist.save();
 
   res.json({
     success: true,
