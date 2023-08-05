@@ -15,7 +15,7 @@ dbConnect(() =>
 const app = express();
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: true,
     optionsSuccessStatus: 200,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
