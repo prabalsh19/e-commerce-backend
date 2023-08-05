@@ -6,14 +6,21 @@ const { products } = require("./routes/products");
 const { categories } = require("./routes/categories");
 const { cart } = require("./routes/cart");
 const { wishlist } = require("./routes/wishlist");
-
+const cors = require("cors");
 config();
 dbConnect(() =>
   app.listen(3000, () => console.log("App is listening at port 3000"))
 );
 
 const app = express();
-
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    optionsSuccessStatus: 200,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  })
+);
 app.use(express.json());
 
 app.get("/", (req, res) => {
