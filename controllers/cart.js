@@ -23,15 +23,15 @@ exports.getCartItemsHandler = async (req, res) => {
 exports.postCartItemHandler = async (req, res) => {
   try {
     const { id: productId } = req.body;
-    const itemExist = await cart.findOne({ product: productId });
+    const userId = req.userId;
+    const itemExist = await cart.findOne({ product: productId, user: userId });
 
     if (itemExist) {
       await cart.findByIdAndUpdate(itemExist._id, {
         quantity: itemExist.quantity + 1,
       });
-
       const cartResponse = await cart
-        .find({ email: req.email })
+        .find({ user: userId })
         .populate("product")
         .exec();
       return res.json({ cart: cartResponse });
@@ -47,7 +47,7 @@ exports.postCartItemHandler = async (req, res) => {
 
     await cart.create(cartItem);
     const cartResponse = await cart
-      .find({ email: req.email })
+      .find({ user: userId })
       .populate("product")
       .exec();
     res.json({ cart: cartResponse });
@@ -62,7 +62,9 @@ exports.postCartItemHandler = async (req, res) => {
 exports.deleteCartItemHandler = async (req, res) => {
   try {
     const { id } = req.params;
-    const itemExist = await cart.findOne({ _id: id, user: req.userId });
+    const userId = req.userId;
+
+    const itemExist = await cart.findOne({ _id: id, user: userId });
     if (!itemExist) {
       return res.json({ success: false, message: "Item does not exist" });
     }
@@ -71,11 +73,11 @@ exports.deleteCartItemHandler = async (req, res) => {
         { _id: id },
         { quantity: itemExist.quantity - 1 }
       );
-      const cartResponse = await cart.find({ email: req.email });
+      const cartResponse = await cart.find({ user: userId });
       return res.json({ cart: cartResponse });
     }
     await cart.findOneAndDelete({ _id: id });
-    const cartResponse = await cart.find({ email: req.email });
+    const cartResponse = await cart.find({ user: userId });
     return res.json({ cart: cartResponse });
   } catch (e) {
     res.json({
